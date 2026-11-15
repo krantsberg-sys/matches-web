@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>הזז את הגפרור – חידות גפרורים</title>
+<meta name="description" content="הזזו גפרור אחד ותקנו את המשוואה. חידות לוגיקה בארבע רמות קושי, עם רצף יומי.">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#17110d;--card:#271c15;--tx:#f6e9d8;--mu:#b9a58e;--wood:#efb85f;--wood2:#b9791f;--eq:#a8927a;--ac:#ff6a2b;--ok:#46c37b;--ad:#33261c;--gh:#5d4838;--hd:#e8402a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#17110d;--card:#271c15;--tx:#f6e9d8;--mu:#b9a58e;--wood:#efb85f;--wood2:#b9791f;--eq:#a8927a;--ac:#ff6a2b;--ok:#46c37b;--ad:#33261c;--gh:#5d4838;--hd:#e8402a}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#17110d;--card:#271c15;--tx:#f6e9d8;--mu:#b9a58e;--wood:#efb85f;--wood2:#b9791f;--eq:#a8927a;--ac:#ff6a2b;--ok:#46c37b;--ad:#33261c;--gh:#5d4838;--hd:#e8402a}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;display:flex;flex-direction:column;align-items:center}
+header{width:100%;max-width:480px;display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0;box-sizing:border-box}
+h1{font-size:22px;margin:0}
+.lvl{background:var(--card);padding:6px 14px;border-radius:20px;font-weight:700}
+main{flex:1;width:100%;max-width:480px;padding:12px 16px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+p.sub{margin:0;color:var(--mu);text-align:center}
+.board{background:var(--card);border-radius:20px;padding:18px 6px;width:100%;box-shadow:0 2px 10px rgba(0,0,0,.08);direction:ltr}
+svg{width:100%;height:auto;display:block;touch-action:manipulation}
+.m{fill:var(--wood);stroke:var(--wood2);stroke-width:1.5}
+.eq{fill:var(--eq)}
+.ghost{fill:none;stroke:var(--gh);stroke-width:2;stroke-dasharray:4 3}
+.org{fill:none;stroke:var(--ac);stroke-width:2;stroke-dasharray:4 3}
+.hint{stroke:var(--ac);stroke-width:3;animation:p .8s infinite alternate}
+.hg{fill:none;stroke:var(--ac);stroke-width:3;stroke-dasharray:4 3;animation:p .8s infinite alternate}
+@keyframes p{to{opacity:.35}}
+.hit{fill:transparent;cursor:pointer}
+.msg{min-height:24px;font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+button{font:inherit;border:0;border-radius:14px;padding:12px 16px;background:var(--card);color:var(--tx);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.12);cursor:pointer}
+button.pri{background:var(--ac);color:#fff}
+button:disabled{opacity:.5}
+.ad{width:100%;max-width:480px;height:50px;background:var(--ad);color:var(--mu);font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:auto}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:9;padding:20px}
+.ov.on{display:flex}
+.box{background:var(--card);border-radius:20px;padding:24px;max-width:340px;width:100%;text-align:center;display:flex;flex-direction:column;gap:12px}
+.fake{background:var(--ad);height:160px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:13px;padding:8px}
+.note{font-size:12px;color:var(--mu)}
+.tiers{display:flex;gap:6px;padding:10px 16px 0;width:100%;max-width:480px;box-sizing:border-box}.t{flex:1;padding:8px 2px;font-size:14px;line-height:1.3;border-radius:12px;box-shadow:none;border:2px solid transparent}.t small{font-weight:400;color:var(--mu);font-size:11px}.t.on{border-color:var(--ac)}
+html:root{color-scheme:dark}body{background:radial-gradient(ellipse at 50% 0%,#40241a 0,var(--bg) 62%) fixed}
+h1{margin:0;font-size:20px}header{gap:6px}.lg{background:linear-gradient(90deg,#ffd27a,#ff6a2b);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.hd{fill:var(--hd)}.board{box-shadow:0 0 0 1px #4a3223,0 8px 30px rgba(255,106,43,.12)}.lvl{border:1px solid #4a3223}button.pri{background:linear-gradient(135deg,#ff8a3d,#e8402a)}
+.pb{width:100%;max-width:340px;height:12px;border-radius:8px;background:#3a2a20;overflow:hidden;box-shadow:inset 0 0 0 1px #4a3223}.pb i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#ffd27a,#ff6a2b,#e8402a);transition:width .5s}.pb.done i{background:linear-gradient(90deg,#46c37b,#9be564)}
+.sp{position:fixed;inset:0;z-index:99;background:radial-gradient(ellipse at 50% 35%,#40241a 0,#17110d 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#f6e9d8;transition:opacity .45s;cursor:pointer}
+.sp.off{opacity:0;pointer-events:none}
+.sp h2{margin:6px 0 0;font-size:32px;font-weight:800;background:linear-gradient(90deg,#ffd27a,#ff6a2b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sp p{margin:0;color:#b9a58e}.sp .st{font-weight:700;min-height:22px;margin-top:10px}.sp .hn{font-size:12px;color:#8d7a66;margin-top:2px}
+.sp .ld{width:140px;height:5px;border-radius:4px;background:#3a2a20;overflow:hidden;margin-top:16px}.sp .ld i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd27a,#ff6a2b);animation:ld 2.4s linear forwards}
+@keyframes ld{to{width:100%}}.fl,.fi{transform-box:fill-box;transform-origin:50% 100%;animation:fk .5s ease-in-out infinite alternate}.fi{animation-duration:.33s;animation-delay:-.1s}@keyframes fk{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.9,1.14) rotate(3deg)}}
+.gl{transform-box:fill-box;transform-origin:50% 50%;animation:gp 1.2s ease-in-out infinite alternate}@keyframes gp{from{opacity:.5;transform:scale(.88)}to{opacity:1;transform:scale(1.12)}}
+.sk{opacity:0;animation:sk 1.8s ease-out infinite}@keyframes sk{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(var(--dx),-75px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.fl,.fi,.gl,.sk{animation:none}.sk{display:none}}
+#lr{display:none;width:100%;max-width:340px}
+.lrm #lr{display:block}.lrm #tr,.lrm #dp,.lrm .pb,.lrm #bh,.lrm #bz,.lrm #lrb,.lrm #lgb{display:none}
+.lrt{display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:13px}.lrt b{font-size:32px;font-variant-numeric:tabular-nums}.lrt b.low{color:var(--hd);animation:gp .5s infinite alternate}
+.mbar{position:relative;height:62px;direction:ltr}
+.mw{position:absolute;right:0;top:40px;height:12px;width:100%;border-radius:0 7px 7px 0;background:linear-gradient(90deg,#2a190d 0,#8a5a22 14px,var(--wood) 40px,var(--wood2))}
+.mf{position:absolute;bottom:16px;width:28px;height:44px;right:calc(100% - 14px)}.lro .mf{display:none}
+</style>
+</head>
+<body>
+<div class="sp" id="sp"><svg width="130" height="130" viewBox="0 0 200 200" style="overflow:visible"><defs><radialGradient id="gg"><stop offset="0" stop-color="#ffb347" stop-opacity=".85"/><stop offset="1" stop-color="#ff6a2b" stop-opacity="0"/></radialGradient></defs><circle class="gl" cx="135" cy="46" r="62" fill="url(#gg)"/><g transform="rotate(28 100 110)"><rect x="90" y="70" width="20" height="125" rx="8" fill="#e9b45e"/><rect x="90" y="70" width="5" height="125" rx="3" fill="#be8638"/><circle cx="100" cy="68" r="17" fill="#e24028"/><circle cx="94" cy="62" r="5" fill="#ff966e"/><g class="fl"><path d="M100 8C114 28 122 40 114 58C108 66 92 66 86 58C78 40 86 28 100 8Z" fill="#ff8c28"/><path class="fi" d="M100 30C108 42 110 50 106 58C103 62 97 62 94 58C90 50 93 42 100 30Z" fill="#ffd66e"/></g></g><circle class="sk" cx="132" cy="40" r="2.5" fill="#ffd66e" style="--dx:-14px"/><circle class="sk" cx="140" cy="44" r="2" fill="#ff8c28" style="--dx:12px;animation-delay:.5s"/><circle class="sk" cx="136" cy="36" r="2" fill="#ffd66e" style="--dx:6px;animation-delay:.9s"/><circle class="sk" cx="128" cy="46" r="1.8" fill="#ff966e" style="--dx:-22px;animation-delay:1.3s"/><circle class="sk" cx="144" cy="40" r="1.6" fill="#ffd66e" style="--dx:20px;animation-delay:.2s"/></svg>
+<h2>הזז את הגפרור</h2><p>חידות גפרורים</p><div class="st" id="spst"></div><div class="ld"><i></i></div><div class="hn">לחץ להמשך</div></div>
+<header><h1><span class="lg">🔥 הזז את הגפרור</span></h1><button class="lvl" id="sn" style="box-shadow:none">🔊</button><div class="lvl" id="st">🔥 0</div><div class="lvl">שלב <span id="lv">1</span></div></header>
+<div class="tiers" id="tr"></div>
+<main>
+<div id="lr"><div class="lrt"><span>⚡ סיבוב מהיר</span><b id="lrt">2:30</b><span id="lrc">0/10</span></div><div class="mbar"><div class="mw" id="mw"></div><div class="mf" id="mf"><svg viewBox="0 0 28 44" width="28" height="44" style="overflow:visible"><defs><radialGradient id="g2"><stop offset="0" stop-color="#ffb347" stop-opacity=".85"/><stop offset="1" stop-color="#ff6a2b" stop-opacity="0"/></radialGradient></defs><circle class="gl" cx="14" cy="30" r="22" fill="url(#g2)"/><g class="fl"><path d="M14 2C20 12 24 18 20 28C17 33 11 33 8 28C4 18 8 12 14 2Z" fill="#ff8c28"/><path class="fi" d="M14 14C18 20 19 25 17 29C16 31 12 31 11 29C9 25 10 20 14 14Z" fill="#ffd66e"/></g></svg></div></div></div>
+<p class="sub" id="sb">הזז גפרור אחד כדי שהמשוואה תהיה נכונה</p>
+<div class="msg" id="dp"></div>
+<div class="pb"><i id="pf"></i></div>
+<div class="board"><svg id="sv" viewBox="0 0 370 120"></svg></div>
+<div class="msg" id="msg"></div>
+<div class="row">
+<button id="bz" class="pri" style="display:none">🔥 הצל את הרצף (פרסומת)</button>
+<button class="pri" id="lrb">⚡ סיבוב מהיר</button>
+<button id="bh">💡 רמז</button>
+<button id="br">↺ אפס</button>
+<button id="lgb">🌐 English</button>
+
+</div>
+</main>
+<div class="ad">מקום לבאנר קטן (במובייל: AdMob)</div>
+
+<div class="ov" id="win"><div class="box"><div style="font-size:40px">🎉</div><b>כל הכבוד!</b><div id="wt"></div><button class="pri" id="nx">לשלב הבא</button></div></div>
+<div class="ov" id="adv"><div class="box"><div class="note" id="adt"></div><div class="fake">כאן תוצג פרסומת אמיתית</div><button id="adc" disabled>המתן…</button></div></div>
+
+<div class="ov" id="lk"><div class="box" id="lkb"></div></div>
+<script>
+const D=[63,6,91,79,102,109,125,7,127,111],OPS={1:'-',3:'+'},NEED=100,PRICE='₪7.90',PACK='₪19.90',KEEP='₪7.90';
+const TI=[null,{n:'קל',N:[1,1,1],k:1,a:[0,9],b:[0,9]},{n:'בינוני',N:[2,1,2],k:1,a:[10,99],b:[1,9]},{n:'קשה',N:[2,2,2],k:1,a:[10,99],b:[10,99]},{n:'מומחה',N:[2,2,2],k:2,a:[10,99],b:[10,99]}];
+function num(m,f,n){let v=0;for(let i=0;i<n;i++){const d=D.indexOf(m[f+i]);if(d<0)return -1;v=v*10+d}if(n>1&&D.indexOf(m[f])==0)return -1;return v}
+function dec(m,N){const a=num(m,0,N[0]),b=num(m,N[0]+1,N[1]),c=num(m,N[0]+1+N[1],N[2]),o=OPS[m[N[0]]];return(a<0||b<0||c<0||!o)?null:[a,o,b,c]}
+const ok=(m,N)=>{const d=dec(m,N);return !!d&&(d[1]=='+'?d[0]+d[2]:d[0]-d[2])==d[3]};
+const slots=N=>[...Array(N[0]).fill(7),2,...Array(N[1]).fill(7),...Array(N[2]).fill(7)];
+function moves(m,N,sl,strict){const out=[];for(let i=0;i<sl.length;i++)for(let s=0;s<sl[i];s++)if(m[i]>>s&1){const r=m.slice();r[i]^=1<<s;
+for(let j=0;j<sl.length;j++)for(let t=0;t<sl[j];t++)if(!(r[j]>>t&1)&&!(i==j&&s==t)){const q=r.slice();q[j]|=1<<t;if(!strict||(dec(q,N)&&!ok(q,N)))out.push({q,pick:[j,t],put:[i,s]})}}return out}
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const ri=(r,x)=>x[0]+(r()*(x[1]-x[0]+1)|0),dg=(v,n)=>String(v).padStart(n,'0').split('').map(x=>D[+x]);
+function make(t,n){const T=TI[t],N=T.N,sl=slots(N),r=rng(t*100003+n*7919+13);
+for(;;){const a=ri(r,T.a),b=ri(r,T.b),p=r()<.5,c=p?a+b:a-b;if(c<0||c>10**N[2]-1||(N[2]>1&&c<10))continue;
+const m=[...dg(a,N[0]),p?3:1,...dg(b,N[1]),...dg(c,N[2])],mv=moves(m,N,sl,T.k==1);if(!mv.length)continue;const x=mv[r()*mv.length|0];
+if(T.k==2){const m2=moves(x.q,N,sl,true);if(!m2.length)continue;const y=m2[r()*m2.length|0];return{q:y.q,pick:y.pick,put:y.put,N,sl,k:2}}
+return{q:x.q,pick:x.pick,put:x.put,N,sl,k:1}}}
+//UI
+const G=[[10,8,40,8],[52,12,8,44],[52,64,8,44],[10,104,40,8],[0,64,8,44],[0,12,8,44],[10,56,40,8]],GO=[[10,56,40,8],[26,34,8,52]];
+const $=id=>document.getElementById(id);
+let AC;function snd(ok){if(S.mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume();
+const n=ok?[[523,0],[659,.1],[784,.2],[1047,.3]]:[[220,0],[165,.16]];
+n.forEach(([f,t])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=ok?'triangle':'sawtooth';o.frequency.value=f;o.connect(g);g.connect(AC.destination);
+const a=AC.currentTime+t;g.gain.setValueAtTime(.0001,a);g.gain.exponentialRampToValueAtTime(.18,a+.02);g.gain.exponentialRampToValueAtTime(.0001,a+(ok?.25:.3));o.start(a);o.stop(a+.32)})}catch(e){}}
+const ds=o=>{const d=new Date();d.setDate(d.getDate()+o);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+let S={t:1,ln:{1:1,2:1,3:1,4:1},prog:{1:0,2:0,3:0,4:0},paid:{},solved:{},cdone:{},freeze:0,hints:3,done:0,lastAd:0,streak:0,last:'',today:'',cnt:0};
+try{Object.assign(S,JSON.parse(localStorage.getItem('nz1')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('nz1',JSON.stringify(S))}catch(e){}};
+const stk=()=>(S.last==ds(0)||S.last==ds(-1))?S.streak:0;
+const dd=s=>{const[y,m,d]=s.split('-').map(Number);return Math.round(Date.UTC(y,m-1,d)/864e5)};
+const missed=()=>S.last?Math.max(0,dd(ds(0))-dd(S.last)-1):0;
+const canRescue=()=>S.streak>0&&missed()>0&&missed()<=7;
+function settle(){const g=missed();if(S.streak>0&&g>0){if(g<=(S.freeze||0)){S.freeze-=g;S.last=ds(-1);S.note='❄ נוצלו '+g+' ימי חופשה והרצף נשמר'}else if(g>7)S.streak=0;save()}}
+const cnt=()=>S.today==ds(0)?S.cnt:0;
+const tmp=t=>!!S.tmp&&S.tmp[t]>Date.now();
+const unl=t=>t==1||!!S.pack||!!S.paid[t]||S.prog[t-1]>=NEED||tmp(t);
+let L,cur,held,lock,hintOn,mv=0;
+const DAILY=10,TOT={1:625,2:20678,3:115786},POOL={},SS={};
+const key=q=>q.map(v=>v.toString(16).padStart(2,'0')).join('');
+const ssOf=t=>SS[t]||(SS[t]=new Set((S.solved&&S.solved[t])||[]));
+function pool(t){if(!POOL[t]){const T=TI[t],N=T.N,sl=slots(N),P=new Map();
+for(let a=T.a[0];a<=T.a[1];a++)for(let b=T.b[0];b<=T.b[1];b++)for(const p of[1,0]){const c=p?a+b:a-b;if(c<0||c>10**N[2]-1||(N[2]>1&&c<10))continue;
+const m=[...dg(a,N[0]),p?3:1,...dg(b,N[1]),...dg(c,N[2])];for(const x of moves(m,N,sl,true)){const k=key(x.q);if(!P.has(k))P.set(k,{q:x.q,pick:x.pick,put:x.put,N,sl,k:1})}}
+POOL[t]=[...P.values()]}return POOL[t]}
+function pickFree(t,n){const ss=ssOf(t),free=pool(t).filter(x=>!ss.has(key(x.q)));if(!free.length)return null;return free[rng(t*100003+n*7919+13)()*free.length|0]}
+function pickPuzzle(t,n){if(t<=2)return pickFree(t,n);const ss=ssOf(t);
+for(let a=0;a<300;a++){const P=make(t,n+a*100000);if(!ss.has(key(P.q)))return P}
+return t==3?pickFree(3,n):make(t,n)}
+function showDone(){lock=true;const t=S.t;
+$('lkb').innerHTML='<div style="font-size:40px">🏆</div><b>כל הכבוד! רמת “'+TI[t].n+'” הושלמה</b><div>פתרת את כל החידות ברמה הזו.</div>'+(t<4?'<button class="pri" id="dn">לרמה הבאה: “'+TI[t+1].n+'”</button>':'')+'<button id="dr">שחק את הרמה שוב מההתחלה</button>';
+$('lk').classList.add('on');
+if($('dn'))$('dn').onclick=()=>{$('lk').classList.remove('on');S.t=t+1;save();load()};
+$('dr').onclick=()=>{$('lk').classList.remove('on');S.solved[t]=[];SS[t]=new Set();save();load()}}
+function load(){settle();if(S.hday!=ds(0)){S.hday=ds(0);S.hints=3;save()}if(!unl(S.t))S.t=1;const L2=pickPuzzle(S.t,S.ln[S.t]);if(!L2){tiers();showDone();return}L=L2;cur=L.q.slice();held=null;lock=false;hintOn=false;mv=0;
+$('lv').textContent=S.ln[S.t];$('sb').textContent=L.k==2?'הזז שני גפרורים כדי שהמשוואה תהיה נכונה':'הזז גפרור אחד כדי שהמשוואה תהיה נכונה';
+const cr=canRescue();$('st').textContent='🔥 '+(cr?S.streak+' ⚠':stk())+' ❄'+(S.freeze||0);$('bz').style.display=cr?'':'none';
+const c=cnt();$('dp').textContent='היעד היום: '+Math.min(c,DAILY)+'/'+DAILY+(c>=DAILY?' ✓':'');$('pf').style.width=Math.min(c,DAILY)/DAILY*100+'%';$('pf').parentNode.classList.toggle('done',c>=DAILY);
+document.querySelector('.ad').style.display=S.pack?'none':'';$('msg').textContent=S.note||'';S.note='';$('bh').textContent='💡 רמז ('+(S.hints>0?S.hints:'פרסומת')+')';tiers();render()}
+function tiers(){$('tr').innerHTML=[1,2,3,4].map(t=>'<button class="t'+(S.t==t?' on':'')+'" data-t="'+t+'">'+TI[t].n+'<br><small>'+(unl(t)?(S.cdone[t]?'🏆 ':'')+(tmp(t)&&!S.paid[t]&&S.prog[t-1]<NEED?'⏳ עד '+(S.tmp[t]-Date.now()>9e7?new Date(S.tmp[t]).toLocaleDateString('he-IL',{day:'numeric',month:'numeric'}):'חצות'):(t<4&&!unl(t+1)?S.prog[t]+'/'+NEED:S.prog[t]+' נפתרו')):'🔒')+'</small></button>').join('')}
+$('tr').onclick=e=>{const b=e.target.closest('button');if(!b||lock)return;const t=+b.dataset.t;if(unl(t)){S.t=t;save();load()}else lockModal(t)};
+function lockModal(t){const need=NEED-Math.min(S.prog[t-1],NEED);
+$('lkb').innerHTML='<div style="font-size:36px">🔒</div><b>רמת “'+TI[t].n+'” נעולה</b><div>פתרו עוד '+need+' שלבים ברמה “'+TI[t-1].n+'” כדי לפתוח אותה בחינם.</div><button id="pw">📺 צפה בפרסומת (30 שניות) – פתח ליום אחד</button><button class="pri" id="pay">פתח רמה זו – '+PRICE+'</button><button class="pri" id="pk">חבילה מלאה: כל הרמות + בלי פרסומות – '+PACK+'</button><button id="lc">סגור</button><div class="note">רכישת דמה. באנדרואיד התשלום יעבור דרך Google Play.</div>';
+$('lk').classList.add('on');$('lc').onclick=()=>$('lk').classList.remove('on');
+$('pw').onclick=()=>{$('lk').classList.remove('on');adModal('צפה בפרסומת כדי לפתוח את רמת “'+TI[t].n+'” עד חצות',30,{label:'פתח את הרמה ✓',f:()=>{(S.tmp=S.tmp||{})[t]=(d=>(d.setHours(24,0,0,0),d.getTime()))(new Date());S.t=t;save();load();$('msg').textContent='הרמה פתוחה עד חצות'}})};
+$('pay').onclick=()=>{S.paid[t]=true;S.t=t;save();$('lk').classList.remove('on');load();$('msg').textContent='הרמה נפתחה (רכישת דמה)'};$('pk').onclick=()=>{S.pack=true;S.t=t;save();$('lk').classList.remove('on');load();$('msg').textContent='החבילה נרכשה (רכישת דמה)'}}
+function render(){const{N,sl}=L,na=N[0],H=hintOn?hint():null,eqc=na+1+N[1],cells=sl.length+1,pad=Math.round(8*cells/5);let h='';
+$('sv').setAttribute('viewBox','0 0 '+cells*74+' 120');
+for(let i=0;i<sl.length;i++){const x0=(i>=eqc?i+1:i)*74;
+for(let s=0;s<sl[i];s++){const g=(i==na?GO:G)[s],x=x0+g[0],y=g[1],on=cur[i]>>s&1;
+let cls=on?'m':(held?'ghost':'');if(held&&held[0]==i&&held[1]==s)cls='org';
+if(H){const pk=H.pick,pt=H.put;if(!held&&pk[0]==i&&pk[1]==s)cls+=' hint';if(held&&pt[0]==i&&pt[1]==s)cls='hg'}
+if(cls)h+=`<rect class="${cls}" x="${x}" y="${y}" width="${g[2]}" height="${g[3]}" rx="4"/>`;if(on)h+=`<circle class="hd" cx="${x+4}" cy="${y+4}" r="6"/>`;
+h+=`<rect class="hit" data-i="${i}" data-s="${s}" x="${x-pad}" y="${y-pad}" width="${g[2]+2*pad}" height="${g[3]+2*pad}"/>`}}
+const ex=eqc*74+10;h+=`<rect class="eq" x="${ex}" y="44" width="40" height="8" rx="4"/><rect class="eq" x="${ex}" y="68" width="40" height="8" rx="4"/>`;
+$('sv').innerHTML=h}
+function solve(m,r){const N=L.N,sl=L.sl;
+for(let i=0;i<sl.length;i++)for(let s=0;s<sl[i];s++)if(m[i]>>s&1){const a=m.slice();a[i]^=1<<s;
+for(let j=0;j<sl.length;j++)for(let t=0;t<sl[j];t++)if(!(a[j]>>t&1)&&!(i==j&&s==t)){const q=a.slice();q[j]|=1<<t;
+if(r==1?ok(q,N):solve(q,r-1))return{pick:[i,s],put:[j,t]}}}return null}
+function hint(){const r=L.k-mv,N=L.N,sl=L.sl;if(!held)return solve(cur,r);
+for(let j=0;j<sl.length;j++)for(let t=0;t<sl[j];t++)if(!(cur[j]>>t&1)&&!(j==held[0]&&t==held[1])){const q=cur.slice();q[j]|=1<<t;if(r==1?ok(q,N):solve(q,r-1))return{pick:held,put:[j,t]}}return null}
+function win(){snd(1);S.done++;S.prog[S.t]++;S.ln[S.t]++;const kk=key(L.q);ssOf(S.t).add(kk);(S.solved[S.t]=S.solved[S.t]||[]).push(kk);if(S.today!=ds(0)){S.today=ds(0);S.cnt=0}S.cnt++;const w=[];
+if(S.cnt==DAILY){if(S.last!=ds(-1))S.bonus=[];S.streak=(S.last==ds(-1)?S.streak:0)+1;S.last=ds(0);w.push(DAILY+' מתוך '+DAILY+'! הרצף שלך: '+S.streak+' ימים 🔥');
+if(S.streak%6==0&&(S.freeze||0)<5){S.freeze=(S.freeze||0)+1;w.push('❄ קיבלת יום חופשה לשמירת הרצף')}
+if(S.streak>=10){S.bonus=S.bonus||[];if(S.streak%10==0){const lt=[2,3,4].find(x=>!unl(x));if(lt){S.bonus.push(lt);w.push('🎁 בונוס רצף: רמת “'+TI[lt].n+'” נפתחה')}}
+S.bonus.forEach(x=>{(S.tmp=S.tmp||{})[x]=Date.now()+3*864e5});if(S.bonus.length)w.push('🎁 הבונוס פתוח ל-3 ימים מהיום, ומתארך עם כל יום רצף')}}else if(S.cnt<DAILY)w.push('פתרת '+S.cnt+' מתוך '+DAILY+' להיום');
+if(S.t<4&&ssOf(S.t).size>=TOT[S.t]){S.cdone[S.t]=true;w.push('🏆 השלמת את כל החידות ברמה “'+TI[S.t].n+'”!')}
+if(S.prog[S.t]==NEED&&S.t<4&&!S.paid[S.t+1])w.push('🔓 רמת “'+TI[S.t+1].n+'” נפתחה!');
+$('wt').innerHTML=w.join('<br>');save();setTimeout(()=>$('win').classList.add('on'),350)}
+$('sv').onclick=e=>{const t=e.target;if(lock||!t.dataset.i)return;const i=+t.dataset.i,s=+t.dataset.s,on=cur[i]>>s&1;
+if(!held){if(on){held=[i,s];cur[i]^=1<<s}}
+else if(held[0]==i&&held[1]==s){cur[i]|=1<<s;held=null}
+else if(on){cur[held[0]]|=1<<held[1];held=[i,s];cur[i]^=1<<s}
+else{cur[i]|=1<<s;held=null;mv++;hintOn=false;lock=true;render();
+if(ok(cur,L.N)){if(LR)lrWin();else win()}
+else if(mv>=L.k){snd(0);$('msg').textContent='זה לא מתאים, נסה שוב';setTimeout(()=>{cur=L.q.slice();mv=0;lock=!!(LR&&LR.over);$('msg').textContent='';render()},900)}
+else{lock=false;$('msg').textContent='מהלך '+mv+' מתוך '+L.k}
+return}
+render()};
+$('br').onclick=()=>{if(lock)return;cur=L.q.slice();held=null;mv=0;$('msg').textContent='';render()};
+$('bh').onclick=()=>{if(lock)return;if(!hint()){$('msg').textContent='ההמשך הזה לא מוביל לפתרון. לחץ אפס';return}if(S.hints>0){S.hints--;save();hintOn=true;$('bh').textContent='💡 רמז ('+(S.hints>0?S.hints:'פרסומת')+')';render()}
+else rewarded('צפה בפרסומת קצרה וקבל רמז',()=>{hintOn=true;render()})};
+
+$('bz').onclick=()=>{if(lock)return;const g=missed(),sv=()=>{S.last=ds(-1);save();$('lk').classList.remove('on');load();$('msg').textContent='הרצף נשמר! המשך לפתור היום'};
+$('lkb').innerHTML='<div style="font-size:36px">❄</div><b>החמצת '+g+' '+(g==1?'יום':'ימים')+'</b><div>אין לך מספיק ימי חופשה. אפשר לשמור על הרצף:</div><button id="r2">📺 צפה בשתי פרסומות (30 שניות כל אחת)</button><button class="pri" id="rp">שלם '+KEEP+' ושמור על הרצף</button><button id="rc">ויתור</button><div class="note">התשלום הוא דמה בגרסת הבדיקה.</div>';
+$('lk').classList.add('on');$('rc').onclick=()=>$('lk').classList.remove('on');$('rp').onclick=sv;
+$('r2').onclick=()=>{$('lk').classList.remove('on');adModal('פרסומת 1 מתוך 2',30,{label:'המשך',f:()=>adModal('פרסומת 2 מתוך 2',30,{label:'שמור את הרצף ✓',f:sv})})}};
+function adModal(txt,secs,cb){$('adt').textContent=txt;const b=$('adc');b.disabled=true;$('adv').classList.add('on');let n=secs;b.textContent='המתן '+n+'…';
+const iv=setInterval(()=>{n--;if(n>0)b.textContent='המתן '+n+'…';else{clearInterval(iv);b.disabled=false;b.textContent=cb.label}},1000);
+b.onclick=()=>{$('adv').classList.remove('on');cb.f()}}
+function rewarded(txt,f){adModal(txt,4,{label:'קבל את הפרס ✓',f})}
+$('nx').onclick=()=>{$('win').classList.remove('on');const now=Date.now();
+if(!S.pack&&S.done>=3&&S.done%4==0&&cnt()!=DAILY&&now-S.lastAd>60000){S.lastAd=now;save();adModal('פרסומת (מופיעה פעם ב-4 שלבים, לא יותר מפעם בדקה)',3,{label:'סגור',f:load})}else load()};
+if(!unl(S.t))S.t=1;
+const PRI=[['“קל”','“Easy”'],['“בינוני”','“Medium”'],['“קשה”','“Hard”'],['“מומחה”','“Expert”']],EX={'קל':'Easy','בינוני':'Medium','קשה':'Hard','מומחה':'Expert'};
+const FR=[['❄ נוצלו ','❄ Used '],[' ימי חופשה והרצף נשמר',' rest days and your streak is safe'],['כל הכבוד! רמת “','Well done! Level “'],['” הושלמה','” complete'],['פתרת את כל החידות ברמה הזו.','You solved every puzzle in this level.'],['לרמה הבאה: “','Next level: “'],['שחק את הרמה שוב מההתחלה','Play this level again from the start'],['הזז שני גפרורים כדי שהמשוואה תהיה נכונה','Move two matches to make the equation true'],['הזז גפרור אחד כדי שהמשוואה תהיה נכונה','Move one match to make the equation true'],['היעד היום: ','Today’s goal: '],['💡 רמז (','💡 Hint ('],['פרסומת','ad'],['⏳ עד ','⏳ until '],['חצות','midnight'],[' נפתרו',' solved'],['רמת “','Level “'],['” נעולה','” is locked'],['פתרו עוד ','Solve '],[' שלבים ברמה “',' more levels in “'],['” כדי לפתוח אותה בחינם.','” to unlock it for free.'],['📺 צפה בפרסומת (30 שניות) – פתח ליום אחד','📺 Watch a 30-second ad – unlock for one day'],['פתח רמה זו – ','Unlock this level – '],['חבילה מלאה: כל הרמות + בלי פרסומות – ','Full pack: all levels + no ads – '],['סגור','Close'],['רכישת דמה. באנדרואיד התשלום יעבור דרך Google Play.','Demo purchase. On Android, payment will go through Google Play.'],['צפה בפרסומת כדי לפתוח את רמת “','Watch an ad to unlock level “'],['” עד חצות','” until midnight'],['פתח את הרמה ✓','Unlock level ✓'],['הרמה פתוחה עד חצות','Level unlocked until midnight'],['הרמה נפתחה (רכישת דמה)','Level unlocked (demo purchase)'],['החבילה נרכשה (רכישת דמה)','Pack purchased (demo purchase)'],[' מתוך ',' of '],['! הרצף שלך: ','! Your streak: '],[' ימים 🔥',' days 🔥'],['❄ קיבלת יום חופשה לשמירת הרצף','❄ You earned a rest day to protect your streak'],['🎁 בונוס רצף: רמת “','🎁 Streak bonus: level “'],['” נפתחה','” unlocked'],['🎁 הבונוס פתוח ל-3 ימים מהיום, ומתארך עם כל יום רצף','🎁 The bonus is open for 3 days from today and extends with every streak day'],['פתרת ','You solved '],[' להיום',' today'],['🏆 השלמת את כל החידות ברמה “','🏆 You completed every puzzle in level “'],['🔓 רמת “','🔓 Level “'],['זה לא מתאים, נסה שוב','Not quite, try again'],['מהלך ','Move '],['ההמשך הזה לא מוביל לפתרון. לחץ אפס','This path doesn’t lead to a solution. Tap Reset'],['צפה בפרסומת קצרה וקבל רמז','Watch a short ad to get a hint'],['הרצף נשמר! המשך לפתור היום','Streak saved! Keep solving today'],['החמצת ','You missed '],[' ימים',' days'],[' יום',' day'],['אין לך מספיק ימי חופשה. אפשר לשמור על הרצף:','You don’t have enough rest days. You can protect your streak:'],['📺 צפה בשתי פרסומות (30 שניות כל אחת)','📺 Watch two 30-second ads'],['שלם ','Pay '],[' ושמור על הרצף',' and keep your streak'],['ויתור','Give up'],['התשלום הוא דמה בגרסת הבדיקה.','Payment is a demo in the test version.'],['פרסומת 1 מתוך 2','Ad 1 of 2'],['פרסומת 2 מתוך 2','Ad 2 of 2'],['המשך','Continue'],['שמור את הרצף ✓','Save streak ✓'],['המתן ','Wait '],['המתן…','Wait…'],['קבל את הפרס ✓','Claim reward ✓'],['פרסומת (מופיעה פעם ב-4 שלבים, לא יותר מפעם בדקה)','Ad (shown every 4 levels, at most once a minute)'],['🔥 הזז את הגפרור','🔥 Move the Match'],['שלב ','Level '],['🔥 הצל את הרצף (פרסומת)','🔥 Save your streak (ad)'],['💡 רמז','💡 Hint'],['↺ אפס','↺ Reset'],['מקום לבאנר קטן (במובייל: AdMob)','Small banner placeholder (mobile: AdMob)'],['כל הכבוד!','Well done!'],['לשלב הבא','Next level'],['כאן תוצג פרסומת אמיתית','A real ad will appear here'],['חידות גפרורים','Matchstick puzzles'],['הזז את הגפרור','Move the Match'],['רצף: ','Streak: '],['לחץ להמשך','Tap to continue'],['⚡ סיבוב מהיר','⚡ Lightning round'],['סיבוב מהיר','Lightning round'],['⚡ הושלם היום (','⚡ Done today ('],['הסיבוב המהיר של היום הסתיים','Today’s lightning round is over'],['התוצאה שלך: ','Your result: '],[' מתוך 10. מחר יופיע סיבוב חדש.',' of 10. A new round appears tomorrow.'],['פתרו 10 חידות ב-150 שניות ברמת “','Solve 10 puzzles in 150 seconds at level “'],['”. אפשר להוסיף חצי דקה תמורת פרסומת של 15 שניות. מותר לנסות פעם אחת ביום.','”. You can add 30 seconds for a 15-second ad. One attempt per day.'],['התחל עכשיו','Start now'],['לא עכשיו','Not now'],['נגמר הזמן!','Time’s up!'],['. אפשר להוסיף חצי דקה תמורת פרסומת של 15 שניות, בלי הגבלה.','. You can add 30 seconds with a 15-second ad, no limit.'],['📺 +30 שניות (פרסומת של 15 שניות)','📺 +30 seconds (15-second ad)'],['סיים את הסיבוב','End the round'],['פרסומת: מוסיפה 30 שניות','Ad: adds 30 seconds'],['קבל 30 שניות ✓','Get 30 seconds ✓'],['סיימת את הסיבוב המהיר!','You finished the lightning round!'],['הסיבוב המהיר הסתיים','The lightning round is over'],['זמן: ','Time: '],[' שניות',' seconds']].sort((a,b)=>b[0].length-a[0].length);
+const HE=/[\u0590-\u05FF]/,ORIG=new WeakMap();
+function trText(o){if(!HE.test(o))return o;let v=EX[o.trim()];if(v!==undefined)return v;v=o;for(const[h,e]of PRI)v=v.split(h).join(e);for(const[h,e]of FR)v=v.split(h).join(e);return v}
+function trNode(n){const o=n.nodeValue,v=trText(o);if(v!==o){if(!ORIG.has(n))ORIG.set(n,o);n.nodeValue=v}}
+function walk(root,f){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())f(n)}
+new MutationObserver(ms=>{if(S.lang!='en')return;for(const m of ms){if(m.type=='characterData')trNode(m.target);m.addedNodes.forEach(a=>a.nodeType==3?trNode(a):a.nodeType==1&&walk(a,trNode))}}).observe(document.body,{childList:true,subtree:true,characterData:true});
+function setLang(l){S.lang=l;save();const en=l=='en';document.documentElement.dir=en?'ltr':'rtl';document.documentElement.lang=en?'en':'he';
+document.title=en?'Move the Match – Matchstick Puzzles':'הזז את הגפרור – חידות גפרורים';$('lgb').textContent=en?'🌐 עברית':'🌐 English';
+if(en)walk(document.body,trNode);else walk(document.body,n=>{if(ORIG.has(n)){n.nodeValue=ORIG.get(n);ORIG.delete(n)}})}
+if(!S.lang)S.lang=/^he/i.test(navigator.language||'he')?'he':'en';
+$('lgb').onclick=()=>{setLang(S.lang=='en'?'he':'en');load()};setLang(S.lang);
+let LR=null;
+const lrFmt=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
+const lrModal=h=>{$('lkb').innerHTML=h;$('lk').classList.add('on')};
+const lrBtn=()=>{$('lrb').textContent=S.lrDay==ds(0)?'⚡ הושלם היום ('+(S.lrRes||0)+'/10)':'⚡ סיבוב מהיר'};
+function lrIntro(){if(lock||LR)return;
+if(S.lrDay==ds(0)){lrModal('<div style="font-size:36px">⚡</div><b>הסיבוב המהיר של היום הסתיים</b><div>התוצאה שלך: '+(S.lrRes||0)+' מתוך 10. מחר יופיע סיבוב חדש.</div><button id="lcn">סגור</button>');$('lcn').onclick=()=>$('lk').classList.remove('on');return}
+lrModal('<div style="font-size:36px">⚡</div><b>סיבוב מהיר</b><div>פתרו 10 חידות ב-150 שניות ברמת “'+TI[S.t].n+'”. אפשר להוסיף חצי דקה תמורת פרסומת של 15 שניות. מותר לנסות פעם אחת ביום.</div><button class="pri" id="lgo">התחל עכשיו</button><button id="lcn">לא עכשיו</button>');
+$('lcn').onclick=()=>$('lk').classList.remove('on');$('lgo').onclick=lrStart}
+function lrStart(){$('lk').classList.remove('on');S.lrDay=ds(0);S.lrRes=0;save();lrBtn();
+LR={t:S.t,i:0,solved:0,add:0,over:false,end:Date.now()+150000};document.body.classList.add('lrm');lrLoad();LR.iv=setInterval(lrTick,150);lrTick()}
+function lrLoad(){L=make(LR.t,900000+dd(ds(0))*20+LR.i);cur=L.q.slice();held=null;lock=false;hintOn=false;mv=0;
+$('sb').textContent=L.k==2?'הזז שני גפרורים כדי שהמשוואה תהיה נכונה':'הזז גפרור אחד כדי שהמשוואה תהיה נכונה';$('msg').textContent='';$('lrc').textContent=LR.solved+'/10';render()}
+function lrTick(){const ms=LR.end-Date.now(),s=Math.max(0,Math.ceil(ms/1000)),p=Math.max(0,Math.min(100,ms/1500));
+$('lrt').textContent=lrFmt(s);$('lrt').classList.toggle('low',s<=15);$('mw').style.width=p+'%';$('mf').style.right='calc('+p+'% - 14px)';
+if(ms<=0&&!LR.over)lrTimeout()}
+function lrTimeout(){LR.over=true;lock=true;cur=L.q.slice();held=null;mv=0;render();document.body.classList.add('lro');snd(0);
+lrModal('<div style="font-size:36px">⌛</div><b>נגמר הזמן!</b><div>פתרת '+LR.solved+' מתוך 10. אפשר להוסיף חצי דקה תמורת פרסומת של 15 שניות, בלי הגבלה.</div><button class="pri" id="lpl">📺 +30 שניות (פרסומת של 15 שניות)</button><button id="lfn">סיים את הסיבוב</button>');
+$('lfn').onclick=()=>lrEnd();
+$('lpl').onclick=()=>{$('lk').classList.remove('on');adModal('פרסומת: מוסיפה 30 שניות',15,{label:'קבל 30 שניות ✓',f:()=>{LR.add++;LR.end=Date.now()+30000;LR.over=false;lock=false;document.body.classList.remove('lro');lrTick()}})}}
+function lrWin(){snd(1);LR.solved++;if(LR.solved>=10){lrEnd();return}LR.i++;lrLoad()}
+function lrEnd(){clearInterval(LR.iv);const n=LR.solved,used=150+30*LR.add-Math.max(0,Math.ceil((LR.end-Date.now())/1000));
+S.lrRes=n;save();LR=null;document.body.classList.remove('lrm','lro');lrBtn();load();
+lrModal(n>=10?'<div style="font-size:40px">🏆</div><b>סיימת את הסיבוב המהיר!</b><div>זמן: '+used+' שניות</div><button class="pri" id="lcn">סגור</button>':'<div style="font-size:36px">⚡</div><b>הסיבוב המהיר הסתיים</b><div>פתרת '+n+' מתוך 10</div><button id="lcn">סגור</button>');
+$('lcn').onclick=()=>$('lk').classList.remove('on')}
+$('lrb').onclick=lrIntro;lrBtn();
+$('sn').textContent=S.mute?'🔇':'🔊';$('sn').onclick=()=>{S.mute=!S.mute;save();$('sn').textContent=S.mute?'🔇':'🔊'};
+load();
+(function(){const sp=$('sp'),k=stk();$('spst').textContent=k>0?'🔥 רצף: '+k+' ימים':'';let d=0;const go=()=>{if(d)return;d=1;sp.classList.add('off');setTimeout(()=>sp.remove(),500)};sp.onclick=go;setTimeout(go,2500)})();
+</script>
+</body>
+</html>
